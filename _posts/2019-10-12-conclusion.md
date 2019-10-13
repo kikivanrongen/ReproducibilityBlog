@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Conclusionx"
+title:  "Conclusion"
 ---
 
 Nothing yet..
