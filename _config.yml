@@ -22,7 +22,7 @@ title: Reproducibility Blog
 students: Kiki van Rongen, Oskar van der Wal, Nikita and Silvan de Boer
 student IDs: 10772820, ...
 description: >- # this means to ignore newlines until "baseurl:"
-  In this blog we pick a research questions and design an experiment to answer the question.
+  In this blog we pick a research question and design an experiment to answer the question.
   It contains background information, our experimental design and the results.
 baseurl: "/ReproducibilityBlog" # the subpath of your site, e.g. /blog
 url: "https://odvanderwal.nl" # the base hostname & protocol for your site, e.g. http://example.com

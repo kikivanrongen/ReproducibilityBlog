@@ -5,7 +5,7 @@ title:  "Experimental Design"
 
 
 
-We have outlined earlier that the divergence of parameters for semi-gradient methods does not always occur under the assumptions of the *deadly triad*. DQN is an example of such a method and for that reason we limit our experiments to this particular algorithm. More specifically, we attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to three environments (**EXPLAIN: WHY THESE FOUR?**):
+We have outlined earlier that the divergence of parameters for semi-gradient methods does not always occur under the assumptions of the *deadly triad*. DQN is an example of such a method and for that reason we limit our experiments to this particular algorithm. More specifically, we attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to three environments:
 
 1. Mountain Car
 2. Acrobot
@@ -25,7 +25,7 @@ Naturally, we also have to tune the hyperparameters. Fortunately, the original D
 
 Our main question is whether the DQN network converges to a solution under the different experimental settings. To measure convergence, we compute the parameter gradient norm in each iteration. The minimal norm (MN) is an indication of convergence. If it is close to zero, it means that the policy hardly changed at some point during training. To have intuition on the variance of this norm over seeds, we report its average, standard deviation, and its minimum and maximum over seeds.
 
-Because convergence does not mean that a globally optimal solution is found, we also report various quantities related to the specific environments, one of which is the cumulative reward at each time step. 
+Because convergence does not mean that a globally optimal solution is found, we also report various quantities related to the specific environments, one of which is the cumulative reward at each time step.
 
 Our results will be summarized in a table like below for every environment:
 
@@ -38,4 +38,3 @@ Our results will be summarized in a table like below for every environment:
 | -TN  |        |        |        |        |                       |
 | -RC  |        |        |        |        |                       |
 | +R   |        |        |        |        |                       |
-
