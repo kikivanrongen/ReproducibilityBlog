@@ -5,7 +5,7 @@
 layout: pos
 use_math: true
 ---
-
+<!-- {% include mathjax_support.html %} -->
 A gentle introduction to Reinforcement Learning, Deep Q-Learning Networks and our Experiment
 
 # Reinforcement Learning
