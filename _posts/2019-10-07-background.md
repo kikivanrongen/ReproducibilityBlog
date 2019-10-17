@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Testing the limits of Deep Q-Learning Networks"
+title:  "Background"
 ---
 
 # A gentle introduction to Reinforcement Learning, Deep Q-Learning Networks and our Experiment
