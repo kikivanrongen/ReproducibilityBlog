@@ -9,7 +9,7 @@ markdown: kramdown
 
 A gentle introduction to Reinforcement Learning, Deep Q-Learning Networks and our Experiment
 
-## Reinforcement Learning
+# Reinforcement Learning
 *Reinforcement learning* (RL) is a field in Artificial Intelligence (AI) that is concerned with agents interacting with their environment. An agent could be a robot in a maze, a player in a computer game, a programme in an automatic trading system, and many more things. In RL, there is a typical way of modelling the world. The environment of the agent is subdivided in *states*. A state can be observed by the agent, and it should contain all the information that the agent needs to base her decisions on. In every state, the agent can take some *actions*. The agent bases her actions on her *policy*, this is a function that says how probable it is for the agent to take an action in a state. Once the action is taken, the agent moves to a different state. She also receives a *reward*, which indicates how valuable the action was. The state and reward that are caused by the action do not need to be deterministic. If the agent takes the same action in the same state at a later point in time, the outcome may be different. Typically, agents get the opportunity to interact with the exact same environment multiple times. One interaction might end after a time limit, or when some goal is reached. The interaction is called an *episode*.
 
 In the table below you can see an overview of the different concepts and the symbol that represents them.
@@ -23,7 +23,7 @@ In the table below you can see an overview of the different concepts and the sym
 | Current reward          | r_t       |
 | Policy          | $$\pi$$ |
 
-## The Cookie Collector
+# The Cookie Collector
 Let's make this a bit more concrete. Let's say we have a cookie-collecting robot in a world that has cookies laying around all over the place. The robot can move in four directions (up, down, left, right). She always knows its position in the world, and uses that information to determine where to go next. When she finds a cookie, she gets happy, but she's always looking for more. Her battery lasts two minutes, after which somebody will recharge her and let her play the game again from the start.
 
 The components of the cookie collecting robot and her environment fit nicely in the RL framework. The table shows what form each RL concept takes in this example. Because the example fits in the RL framework, it means that we can apply RL methods to make the robot as succesful as possible, in this case: to make it collect as many cookies as possible withing two minutes.
@@ -40,12 +40,12 @@ The components of the cookie collecting robot and her environment fit nicely in 
 | Episode         | Period of 2 minutes                                       |
 
 
-## The best policy
+# The best policy
 As mentioned before, the agent is interested in getting as much value out of the episode as possible. In formal terms, we want to find the policy which maximizes the expected total reward in the episode. When the agent is in a certain state, she wants to choose the action of which she expects that it will deliver her the most value. This does not only depend on the immediate reward. The agent should also look ahead and choose actions that brings the agent closer to states with high rewards (e.g. closer to a cookie).
 
-To make this decision, we want to have a state-action value function $Q(s,a)$. This function tells us how much value we can expect when we take action $a$ in state $s$. When she has this function, the agent can simply observe her state $s$, and then choose the $a$ which has highest $Q(s,a)$. What remains is the challenge of finding this state-action value function.
+To make this decision, we want to have a state-action value function $$Q(s,a)$$. This function tells us how much value we can expect when we take action $a$ in state $s$. When she has this function, the agent can simply observe her state $s$, and then choose the $a$ which has highest $Q(s,a)$. What remains is the challenge of finding this state-action value function.
 
-## DQN and the Deadly Triad
+# DQN and the Deadly Triad
 Methods to find the state-action value function are called Q-learning methods, and they work in an iterative way. First, an initial setting of the Q-values of each state-action pair is chosen. If this is used as basis for a policy, it performs very bad. In Q-learning, we iteratively update the Q-values (or parameters of our model that gives us Q-values) to make the policy better and better. If the method works, the rewards should converge to a high value if we iterate long enough.
 
 For this blog post, we researched a popular Q-learing method, which is called Deep Q-Learning Network (DQN). You can find the original paper [here](https://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf). It combines three common elements to perform well: function approximation, bootstrapping and off-policy training. We will explain these elements later in more detail. For now, all you need to know that the combination of these three elements is dangerous. Using one or two is done often and works well. However, when all three are used there is a large risk that the returns will *diverge* when we iterate. This means that we end up with a useless Q-function. Because of this dangerous situation, the combination of these three elements is known as the *deadly triad*.
@@ -59,7 +59,7 @@ We hope you are now at least a little bit skeptic before blindly accepting a new
 
 > To what extend do the DQN tricks help to solve the deadly triad problem?
 
-## A deep-dive into the pitfalls of DQN
+# A deep-dive into the pitfalls of DQN
 
 We have mentioned the notion of the *deadly triad* before. Specifically, it mentions three assumptions that, in combination, can be "deadly" for the problem at hand. The term "deadly" actually refers to the concept of divergence, which is just a fancy way of saying that we did not find a solution for the problem. We will now dive into more detail on how this applies to the DQN model.
 
@@ -67,7 +67,7 @@ First of all, we look at function approximation. This is a popular technique tha
 
 Next, we turn to bootstrapping. If we are in a current state and we wish to find the optimal action, we need to have some knowlegde of the future state that this action will lead us to. We can look at this as our 'future value'; we do not have it right now, but we need to take it into account when choosing a path. Bootstrapping is a technique that includes future value by calculating the state-action value of the state we transition to. Other methods (like Monte Carlo) simply use the discounted rewards. The future value is included in the update rule. Now how does this translate to the DQN, you wonder? Take a closer look at the image below:
 
-![DQN algorithm](/assets/DQN-algorithm.png){:height="200px" width="200px"}
+![DQN algorithm](/assets/DQN-algorithm.png){:height="200px" width="250px"}
 
 This is the pseudocode for the DQN algorithm. Hopefully, you will notice that the new state-action value is calculated as the sum of the reward and the subsequent state-action value. For this reason, DQN effectively makes use of bootstrapping.
 
@@ -85,7 +85,7 @@ It sounds more promising now, right? Let's check it out for ourselves by outlini
 
 # Experimental Design
 
-The experiment will attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to the cartpole environment, available within the openAI gym.  
+We will attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to the cartpole environment, available within the openAI gym.  
 
 We investigate five experimental settings:
 
@@ -105,7 +105,7 @@ Because convergence does not mean that a globally optimal solution is found, we 
 
 Our results will be summarized in a table like below for every environment:
 
-**Results for Environment ...**
+<!-- **Results for Environment ...** -->
 
 |      | avg MN | std MN | min MN | max MN | Task specific metrics |
 |------|--------|--------|--------|--------|-----------------------|
