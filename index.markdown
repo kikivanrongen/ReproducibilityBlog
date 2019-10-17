@@ -4,6 +4,7 @@
 
 layout: post
 mathjax: true
+markdown: kramdown
 ---
 
 A gentle introduction to Reinforcement Learning, Deep Q-Learning Networks and our Experiment
@@ -11,7 +12,7 @@ A gentle introduction to Reinforcement Learning, Deep Q-Learning Networks and ou
 ## Reinforcement Learning
 *Reinforcement learning* (RL) is a field in Artificial Intelligence (AI) that is concerned with agents interacting with their environment. An agent could be a robot in a maze, a player in a computer game, a programme in an automatic trading system, and many more things. In RL, there is a typical way of modelling the world. The environment of the agent is subdivided in *states*. A state can be observed by the agent, and it should contain all the information that the agent needs to base her decisions on. In every state, the agent can take some *actions*. The agent bases her actions on her *policy*, this is a function that says how probable it is for the agent to take an action in a state. Once the action is taken, the agent moves to a different state. She also receives a *reward*, which indicates how valuable the action was. The state and reward that are caused by the action do not need to be deterministic. If the agent takes the same action in the same state at a later point in time, the outcome may be different. Typically, agents get the opportunity to interact with the exact same environment multiple times. One interaction might end after a time limit, or when some goal is reached. The interaction is called an *episode*.
 
-In table **TABLENR**, you can see an overview of the different concepts and the symbol that represents them. In figure **FIGNR** you can see a diagram of the described process. Take a look at [**this link**] if you want to read more about these concepts.
+In the table below you can see an overview of the different concepts and the symbol that represents them.
 
 | **RL concept** | **Symbol** |
 |-|-|
@@ -23,9 +24,9 @@ In table **TABLENR**, you can see an overview of the different concepts and the 
 | Policy          | $\pi$ |
 
 ## The Cookie Collector
-Let's make this a bit more concrete. Let's say we have a cookie-collecting robot in a world that has cookies laying around all over the place, like in figure **FIGNR**. The robot can move in four directions (up, down, left, right). She always knows its position in the world, and uses that information to determine where to go next. When she finds a cookie, she gets happy, but she's always looking for more. Her battery lasts two minutes, after which somebody will recharge her and let her play the game again from the start.
+Let's make this a bit more concrete. Let's say we have a cookie-collecting robot in a world that has cookies laying around all over the place. The robot can move in four directions (up, down, left, right). She always knows its position in the world, and uses that information to determine where to go next. When she finds a cookie, she gets happy, but she's always looking for more. Her battery lasts two minutes, after which somebody will recharge her and let her play the game again from the start.
 
-The components of the cookie collecting robot and her environment fit nicely in the RL framework. In table **TABLENR** you can see what form each RL concept takes in this example. Because the example fits in the RL framework, it means that we can apply RL methods to make the robot as succesful as possible, in this case: to make it collect as many cookies as possible withing two minutes.
+The components of the cookie collecting robot and her environment fit nicely in the RL framework. The table shows what form each RL concept takes in this example. Because the example fits in the RL framework, it means that we can apply RL methods to make the robot as succesful as possible, in this case: to make it collect as many cookies as possible withing two minutes.
 
 
 | **RL concept**  | **Cookie Collector**                                      |
@@ -61,7 +62,8 @@ We have mentioned the notion of the *deadly triad* before. Specifically, it ment
 First of all, we look at function approximation. This is a popular technique that overcomes the issue of having to deal with large state spaces. You can imagine that for an increased number of states, it becomes more and more difficult to determine the value of a state. Instead, we try to approximate the value function, hence the name function approximation. In DQN, this corresponds to a deep convolutional network. They have implemented such a network to process the images of the Atari games, where each image can be seen as a state.
 
 Next, we turn to bootstrapping. If we are in a current state and we wish to find the optimal action, we need to have some knowlegde of the future state that this action will lead us to. We can look at this as our 'future value'; we do not have it right now, but we need to take it into account when choosing a path. Bootstrapping is a technique that includes future value by calculating the state-action value of the state we transition to. Other methods (like Monte Carlo) simply use the discounted rewards. The future value is included in the update rule. Now how does this translate to the DQN, you wonder? Take a closer look at the image below:
-![DQN algorithm](/assets/DQN-algorithm.png)
+
+![DQN algorithm](/assets/DQN-algorithm.png){:height="36px" width="36px"}
 
 ~~~
 ( 1) Initialize replay memory $D$ to capacity $N$
