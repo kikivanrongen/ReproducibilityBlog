@@ -32,7 +32,7 @@ github_username:  Vansil
 theme: minima
 plugins:
   - jekyll-feed
-markdown: kramdown
+markdown: maruku
 mathjax: true
 
 # Exclude from processing.
