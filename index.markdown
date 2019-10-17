@@ -61,7 +61,7 @@ We have mentioned the notion of the *deadly triad* before. Specifically, it ment
 First of all, we look at function approximation. This is a popular technique that overcomes the issue of having to deal with large state spaces. You can imagine that for an increased number of states, it becomes more and more difficult to determine the value of a state. Instead, we try to approximate the value function, hence the name function approximation. In DQN, this corresponds to a deep convolutional network. They have implemented such a network to process the images of the Atari games, where each image can be seen as a state.
 
 Next, we turn to bootstrapping. If we are in a current state and we wish to find the optimal action, we need to have some knowlegde of the future state that this action will lead us to. We can look at this as our 'future value'; we do not have it right now, but we need to take it into account when choosing a path. Bootstrapping is a technique that includes future value by calculating the state-action value of the state we transition to. Other methods (like Monte Carlo) simply use the discounted rewards. The future value is included in the update rule. Now how does this translate to the DQN, you wonder? Take a closer look at the image below:
-![DQN algorithm](/assets/DQN-algorithm.jpg)
+![DQN algorithm](/assets/DQN-algorithm.png)
 
 ~~~
 ( 1) Initialize replay memory $D$ to capacity $N$
