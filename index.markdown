@@ -43,7 +43,7 @@ The components of the cookie collecting robot and her environment fit nicely in 
 # The best policy
 As mentioned before, the agent is interested in getting as much value out of the episode as possible. In formal terms, we want to find the policy which maximizes the expected total reward in the episode. When the agent is in a certain state, she wants to choose the action of which she expects that it will deliver her the most value. This does not only depend on the immediate reward. The agent should also look ahead and choose actions that brings the agent closer to states with high rewards (e.g. closer to a cookie).
 
-To make this decision, we want to have a state-action value function $$Q(s,a)$$. This function tells us how much value we can expect when we take action $a$ in state $s$. When she has this function, the agent can simply observe her state $s$, and then choose the $a$ which has highest $Q(s,a)$. What remains is the challenge of finding this state-action value function.
+To make this decision, we want to have a state-action value function \[Q(s,a)\]. This function tells us how much value we can expect when we take action $a$ in state $s$. When she has this function, the agent can simply observe her state $s$, and then choose the $a$ which has highest $Q(s,a)$. What remains is the challenge of finding this state-action value function.
 
 # DQN and the Deadly Triad
 Methods to find the state-action value function are called Q-learning methods, and they work in an iterative way. First, an initial setting of the Q-values of each state-action pair is chosen. If this is used as basis for a policy, it performs very bad. In Q-learning, we iteratively update the Q-values (or parameters of our model that gives us Q-values) to make the policy better and better. If the method works, the rewards should converge to a high value if we iterate long enough.
@@ -67,7 +67,7 @@ First of all, we look at function approximation. This is a popular technique tha
 
 Next, we turn to bootstrapping. If we are in a current state and we wish to find the optimal action, we need to have some knowlegde of the future state that this action will lead us to. We can look at this as our 'future value'; we do not have it right now, but we need to take it into account when choosing a path. Bootstrapping is a technique that includes future value by calculating the state-action value of the state we transition to. Other methods (like Monte Carlo) simply use the discounted rewards. The future value is included in the update rule. Now how does this translate to the DQN, you wonder? Take a closer look at the image below:
 
-![DQN algorithm](/assets/DQN-algorithm.png){:height="200px" width="250px"}
+![DQN algorithm](/assets/DQN-algorithm.png){:height="400px" width="499px"}
 
 This is the pseudocode for the DQN algorithm. Hopefully, you will notice that the new state-action value is calculated as the sum of the reward and the subsequent state-action value. For this reason, DQN effectively makes use of bootstrapping.
 
