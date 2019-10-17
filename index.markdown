@@ -21,7 +21,7 @@ In the table below you can see an overview of the different concepts and the sym
 | All tates, current state   | S, s_t  |
 | All actions, current action | A, a_t  |
 | Current reward          | r_t       |
-| Policy          | $\pi$ |
+| Policy          | $$\pi$$ |
 
 ## The Cookie Collector
 Let's make this a bit more concrete. Let's say we have a cookie-collecting robot in a world that has cookies laying around all over the place. The robot can move in four directions (up, down, left, right). She always knows its position in the world, and uses that information to determine where to go next. When she finds a cookie, she gets happy, but she's always looking for more. Her battery lasts two minutes, after which somebody will recharge her and let her play the game again from the start.
@@ -50,49 +50,42 @@ Methods to find the state-action value function are called Q-learning methods, a
 
 For this blog post, we researched a popular Q-learing method, which is called Deep Q-Learning Network (DQN). You can find the original paper [here](https://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf). It combines three common elements to perform well: function approximation, bootstrapping and off-policy training. We will explain these elements later in more detail. For now, all you need to know that the combination of these three elements is dangerous. Using one or two is done often and works well. However, when all three are used there is a large risk that the returns will *diverge* when we iterate. This means that we end up with a useless Q-function. Because of this dangerous situation, the combination of these three elements is known as the *deadly triad*.
 
-In order to make their method work, the inventors of DQN added some tricks to their method. They claim that when we use these tricks, we don't have to worry about the deadly triad anymore. However, reproducibility is a major problem in reinforcement learning. Remember the cookie problem from before? Think about the possible ways you could solve this issue. Naturally, there are many paths leading to the same amount of cookies, creating equal happiness to the robot. What is then the optimal thing to do?
+In order to make their method work, the inventors of DQN added some tricks. They claim that when we use these tricks, we don't have to worry about the deadly triad anymore.
+
+You can imagine that this is quite a statement. Many years researchers have had to worry about not falling into this trap, and suddenly there is a paper that theoretically should be in it, but for some reason is not? Don't worry, you are not the only one who is suspicious. Surely we do not want to undermine the strength of the DQN model, we are however curious whether we could obtain similar results. This might seem evident, but reproducibility is a major problem in reinforcement learning. Remember the cookie problem from before? Think about the possible ways you could solve this issue. Naturally, there are many paths leading to the same amount of cookies, creating equal happiness to the robot. What is then the optimal thing to do?
 
 We hope you are now at least a little bit skeptic before blindly accepting a newly proposed model, promising the holy grail of reinforcement learning. With this is mind, we will further investigate the DQN model in order to answer the following question:
 
 
 > To what extend do the DQN tricks help to solve the deadly triad problem?
 
+## A deep-dive into the pitfalls of DQN
+
 We have mentioned the notion of the *deadly triad* before. Specifically, it mentions three assumptions that, in combination, can be "deadly" for the problem at hand. The term "deadly" actually refers to the concept of divergence, which is just a fancy way of saying that we did not find a solution for the problem. We will now dive into more detail on how this applies to the DQN model.
 
-First of all, we look at function approximation. This is a popular technique that overcomes the issue of having to deal with large state spaces. You can imagine that for an increased number of states, it becomes more and more difficult to determine the value of a state. Instead, we try to approximate the value function, hence the name function approximation. In DQN, this corresponds to a deep convolutional network. They have implemented such a network to process the images of the Atari games, where each image can be seen as a state.
+First of all, we look at function approximation. This is a popular technique that overcomes the issue of having to deal with large state spaces. You can imagine that for an increased number of states, it becomes more and more difficult to determine the value of a state. Instead, we try to approximate the value function, hence the name function approximation. In DQN, this corresponds to a deep convolutional network. They have implemented such a network to process the images of Atari games, where each image can be seen as a state.
 
 Next, we turn to bootstrapping. If we are in a current state and we wish to find the optimal action, we need to have some knowlegde of the future state that this action will lead us to. We can look at this as our 'future value'; we do not have it right now, but we need to take it into account when choosing a path. Bootstrapping is a technique that includes future value by calculating the state-action value of the state we transition to. Other methods (like Monte Carlo) simply use the discounted rewards. The future value is included in the update rule. Now how does this translate to the DQN, you wonder? Take a closer look at the image below:
 
-![DQN algorithm](/assets/DQN-algorithm.png){:height="36px" width="36px"}
+![DQN algorithm](/assets/DQN-algorithm.png){:height="200px" width="200px"}
 
-~~~
-( 1) Initialize replay memory $D$ to capacity $N$
-( 2) Initialize action-value function $Q$ with random weights $\theta$
-( 3) Initialize target action-value function $\hat{Q}$ with weights $\theta_{target} = \theta$
-( 4) For episode = $1$ to $M$ do
-( 5)     Initialize sequence $s_1=\{x_1\}$ g and preprocessed sequence $\phi_1=\phi(s_1)$
-( 6)     For $t$ = $1$ to $T$ do
-( 7)         With probability $\epsilon$ select a random action $a_t$
-( 8)         otherwise select $a_t=\argmax_a Q(\phi(s_t),a;\phi)$
-( 9)         Execute action $a_t$ in emulator and observe reward $r_t$ and state $x_{t+1}$
-(10)         Clip reward $r_t$
-(11)         Set $s_{t+1}=s_t,a_t,x_{t+1}$ and preprocess $\phi_{t+1}=\phi(s_{t+1})$
-(12)         Store transition ($\phi_t,a_t,r_r,\phi_{t+1}$) in $D$
-(13)         Sample random minibatch of transitions ($\phi_t,a_t,r_r,\phi_{t+1}$) from $D$
-(14)         Set $y_j=r_j + \delta_{j+1} \gamma \max_{a'}\hat{Q}(\phi_{j+1},a';\theta_{target})$
-(15)         Perform a gradient descent step on $(y_j-Q(\phi_j,a_j;\theta))^2$ with respect to the
-(16)         network parameters $$\theta$
-(17)         Every $C$ steps reset $\hat{Q}=Q$
-(18)     End For
-(19) End For
-~~~
-This is the pseudocode for the DQN algorithm. The update step is given at line 14, do you recognize it?
+This is the pseudocode for the DQN algorithm. Hopefully, you will notice that the new state-action value is calculated as the sum of the reward and the subsequent state-action value. For this reason, DQN effectively makes use of bootstrapping.
 
-The last assumption in the triad is off-policy learning.
+The last assumption in the triad is off-policy learning. This is somewhat trivial for DQN since Q-learning methods are generally off-policy. However, we can validate this assumption by looking at the tricks of DQN.
+
+# How can we make it work?
+
+With the notion of the deadly triad and its effect on DQN, we can move on to the tricks. After having read the pitfalls of DQN you might wonder why this method can still perform so well on various games.
+
+The strength of DQN lies in the clever way it deals with instabilities during training of reinforcement learning problems. It introduces two features: experience replay and periodic iterative update rules. The first feature, experience replay, stores the agent's experiences and subsequently draws random samples from this pool. The weight updates are then no longer based on sequential samples, which breaks the data dependency. Furthermore, since these updates occur periodically, it is also more robust to small alterations that severely change the policy. It is worth mentioning that the inclusion of experience smooths learning by averaging over previous states, and hereby conveniently avoids divergence of parameter estimates. In summary, the combination of both circumvents the correlations that are present in the data, as well as between action-values and target values.
+
+Moreover, as the original DQN research specified a wide range of Atari games (49 to be exact) with all considerably diverse scores, they limited the range of rewards between -1 and 1. This means that all negative rewards are set to -1 and positive rewards are set to 1, leaving zero rewards unchanged.
+
+It sounds more promising now, right? Let's check it out for ourselves by outlining the experiments.
 
 # Experimental Design
 
-We have outlined earlier that the divergence of parameters for semi-gradient methods does not always occur under the assumptions of the *deadly triad*. DQN is an example of such a method and for that reason we limit our experiments to this particular algorithm. More specifically, we attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to the cartpole environment.
+The experiment will attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to the cartpole environment, available within the openAI gym.  
 
 We investigate five experimental settings:
 
@@ -102,9 +95,9 @@ We investigate five experimental settings:
 4. **No reward clipping (-RC)**: the real rewards of the environment are used.
 5. **Reward gain (R+)**: the rewards are not clipped, but are miagnified by a factor 100 instead. The intuition behind this is that using magnified rewards hopefully leads to a more extreme result, making the role of reward clipping more obvious for DQN.
 
-In the experiments, we expect our algorithm to perform worse when we leave components out. This indicates that the "tricks", as we may call them, are indeed necessary for proper training. We try to disprove this hypothesis by constantly disabling one of the tricks. If the results show that this does not significantly deteriorates performance, we have a contradiction and our hypothesis is incorrect.  
+In the experiments, we expect our algorithm to perform worse when we leave components out. This indicates that the tricks are indeed necessary for proper training. We try to disprove this hypothesis by constantly disabling one of the tricks. If the results show that this does not significantly deteriorates performance, we have a contradiction and our hypothesis is incorrect.  
 
-Naturally, we also have to tune the hyperparameters. Fortunately, the original DQN paper states that the same hyperparameter settings work for a diverse range of tasks. For that reason, we do not necessarily need to tune them for every environment separately. We tune only the learning rate, for which we try 10 different values. In each experimental setting, we report the results of the optimal learning rate for that setting. The batch size is fixed at 32, which is a typical value that works well under normal conditions. The target network is updated every **C** iterations. Every experiment is run with 10 different seeds, to measure the significance of our findings.
+Naturally, we also have to tune the hyperparameters. Fortunately, the original DQN paper states that the same hyperparameter settings work for a diverse range of tasks. For that reason, we do not necessarily need to tune them for every setting. We tune only the learning rate, for which we try 3 different values. In each experimental setting, we report the results of the optimal learning rate for that setting. The batch size is fixed at 32, which is a typical value that works well under normal conditions. The target network is updated every **C** iterations. Every experiment is run with 5 different seeds, to measure the significance of our findings.
 
 Our main question is whether the DQN network converges to a solution under the different experimental settings. To measure convergence, we compute the parameter gradient norm in each iteration. The minimal norm (MN) is an indication of convergence. If it is close to zero, it means that the policy hardly changed at some point during training. To have intuition on the variance of this norm over seeds, we report its average, standard deviation, and its minimum and maximum over seeds.
 
