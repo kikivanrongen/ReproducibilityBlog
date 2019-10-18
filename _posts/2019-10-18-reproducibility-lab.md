@@ -70,6 +70,28 @@ Next, we turn to bootstrapping. If we are in a current state and we wish to find
 
 ![DQN algorithm](/assets/DQN-algorithm.png){:height="400px" width="499px"}
 
+~~~
+( 1) Initialize replay memory $D$ to capacity $N$
+( 2) Initialize action-value function $Q$ with random weights $\theta$
+( 3) Initialize target action-value function $\hat{Q}$ with weights $\theta_{target} = \theta$
+( 4) For episode = $1$ to $M$ do
+( 5)     Initialize sequence $s_1=\{x_1\}$ g and preprocessed sequence $\phi_1=\phi(s_1)$
+( 6)     For $t$ = $1$ to $T$ do
+( 7)         With probability $\epsilon$ select a random action $a_t$
+( 8)         otherwise select $a_t=\argmax_a Q(\phi(s_t),a;\phi)$
+( 9)         Execute action $a_t$ in emulator and observe reward $r_t$ and state $x_{t+1}$
+(10)         Clip reward $r_t$
+(11)         Set $s_{t+1}=s_t,a_t,x_{t+1}$ and preprocess $\phi_{t+1}=\phi(s_{t+1})$
+(12)         Store transition ($\phi_t,a_t,r_r,\phi_{t+1}$) in $D$
+(13)         Sample random minibatch of transitions ($\phi_t,a_t,r_r,\phi_{t+1}$) from $D$
+(14)         Set $y_j=r_j + \delta_{j+1} \gamma \max_{a'}\hat{Q}(\phi_{j+1},a';\theta_{target})$
+(15)         Perform a gradient descent step on $(y_j-Q(\phi_j,a_j;\theta))^2$ with respect to the
+(16)         network parameters $$\theta$
+(17)         Every $C$ steps reset $\hat{Q}=Q$
+(18)     End For
+(19) End For
+~~~
+
 This is the pseudocode for the DQN algorithm. Hopefully, you will notice that the new state-action value is calculated as the sum of the reward and the subsequent state-action value. For this reason, DQN effectively makes use of bootstrapping.
 
 The last assumption in the triad is off-policy learning. This is somewhat trivial for DQN since Q-learning methods are generally off-policy. However, we can validate this assumption by looking at the tricks of DQN.
