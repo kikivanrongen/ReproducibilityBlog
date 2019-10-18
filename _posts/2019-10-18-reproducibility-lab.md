@@ -98,7 +98,7 @@ We investigate the following five experiments:
 
 In the experiments, we expect our algorithm to perform worse when we leave components out. This indicates that the tricks are indeed necessary for proper training. We try to disprove this hypothesis by constantly disabling one of the tricks. If the results show that this does not significantly deteriorates performance, we have a contradiction and our hypothesis is incorrect.  
 
-As for the architecture of our neural network, we went for something less fancy than a convolutional neural network, since we do not have enough compute and we simply do not need it to do our experiments. We have used a two layer feed-forward neural network with ReLU activation at the hidden state the size of hidden and output states of 256. Naturally, we also have to tune the hyperparameters. Fortunately, the original DQN paper states that the same hyperparameter settings work for a diverse range of tasks. For that reason, we do not necessarily need to tune them for every setting. We tune only the learning rate, for which we try 3 different values. In each experimental setting, we report the results of the optimal learning rate for that setting. The batch size is fixed at 32, which is a typical value that works well under normal conditions. The target network is updated every **C** iterations. Every experiment is run with 10 different seeds, to measure the significance of our findings.
+As for the architecture of our neural network, we went for something less fancy than a convolutional neural network, since we do not have enough compute and we simply do not need it to do our experiments. We have used a two layer feed-forward neural network with ReLU activation at the hidden state the size of hidden and output states of 256. Naturally, we also have to tune the hyperparameters. Fortunately, the original DQN paper states that the same hyperparameter settings work for a diverse range of tasks. For that reason, we do not necessarily need to tune them for every setting. We tune only the learning rate, for which we try 3 different values. In each experimental setting, we report the results of the optimal learning rate for that setting. The batch size is fixed at 32, which is a typical value that works well under normal conditions. The target network is updated every 10 iterations. Every experiment is run with 10 different seeds, to measure the significance of our findings.
 
 Our main question is whether the DQN network converges to a solution under the different experimental settings. To measure convergence, we compute the parameter gradient norm in each iteration. The minimal norm (MN) is an indication of convergence. If it is close to zero, it means that the policy hardly changed at some point during training. To have intuition on the variance of this norm over seeds, we report its average, standard deviation, and its minimum and maximum over seeds.
 
@@ -115,3 +115,22 @@ Our results will be summarized in a table like below for every environment:
 | -TN  |        |        |        |        |                       |
 | -RC  |        |        |        |        |                       |
 | +R   |        |        |        |        |                       |
+
+The implementation of the DQN model is based on [this tutorial for pytorch](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) and code written for an assignment for the course Reinforcement Learning at the University of Amsterdam (2019). You can find the code here: ...
+
+# Results
+
+# Conclusion and Discussion
+
+The most unexpected result of the experiments is that the DQN without experience replay (-ER) actually performs better that the full DQN! It seems that the -ER model is only one that converges. The fact that -ER is only convering on some seeds, but not all, shows how big an influence the choice of the seeds can be on experiments in RL. How can it be that this is the only model that converges?
+
+*FIGURE OF DIFFERENT SEEDS -ER*
+
+Code quality is another important factor which can change the performance of an algorithm and should be taken into account looking into the reproducibility of the experiment. One difference between -ER and the other DQN adaptations, is that -ER only trains it network on the current experience in an online fashion, while the other ones update with a batch-size of 32 for a random sample from all previous experiences. However, all DQN models with experience replay only learn when there is enough memory and skips learning otherwise. This is a convenient way to implement experience replay, however, it comes with the catch that the learning only happens after 32 steps have been taken in the first episode. An alternative implementation could be to implement online learning until there is enough memory, however, then we would partially break the i.i.d. assumption, because the data are sequentially dependent now.
+
+What could this mean?
+
+1) head start for -ER?
+2) overfitting for DQN with ER?
+
+*FIGURE OF PERFORMANCE AND SEE THAT IT IMPROVES ONLY AFTER 32 STEPS?*
