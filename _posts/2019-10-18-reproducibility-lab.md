@@ -116,7 +116,7 @@ Our results will be summarized in a table like below for every environment:
 | -RC  |        |        |        |        |                       |
 | +R   |        |        |        |        |                       |
 
-The implementation of the DQN model is based on [this tutorial for pytorch](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) and code written for an assignment for the course Reinforcement Learning at the University of Amsterdam (2019). You can find the code here: ...
+The implementation of the DQN model is based on [this tutorial for pytorch](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) and code written for an assignment for the course Reinforcement Learning at the University of Amsterdam (2019). You can find the code here: https://github.com/Vansil/ReinforceRepoLab
 
 # Results
 
