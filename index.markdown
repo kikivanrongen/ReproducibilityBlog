@@ -2,10 +2,11 @@
 # Feel free to add content and custom Front Matter to this file.
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
-layout: pos
-use_math: true
+layout: home
 ---
-<!-- {% include mathjax_support.html %} -->
+
+{% include mathjax.html %}
+
 A gentle introduction to Reinforcement Learning, Deep Q-Learning Networks and our Experiment
 
 # Reinforcement Learning
