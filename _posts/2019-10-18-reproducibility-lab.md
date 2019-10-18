@@ -17,11 +17,11 @@ In the table below you can see an overview of the different concepts and the sym
 
 | **RL concept** | **Symbol** |
 |-|-|
-| Current time step | t |
-| Time when episode ends | T |
-| All tates, current state   | S, s_t  |
-| All actions, current action | A, a_t  |
-| Current reward          | r_t       |
+| Current time step | $t$ |
+| Time when episode ends | $T$ |
+| All tates, current state   | $S$, $s_t$  |
+| All actions, current action | $A$, $a_t$  |
+| Current reward          | $r_t$       |
 | Policy          | $$\pi$$ |
 
 # The Cookie Collector
