@@ -98,7 +98,7 @@ We investigate the following five experiments:
 
 In the experiments, we expect our algorithm to perform worse when we leave components out. This indicates that the tricks are indeed necessary for proper training. We try to disprove this hypothesis by constantly disabling one of the tricks. If the results show that this does not significantly deteriorates performance, we have a contradiction and our hypothesis is incorrect.  
 
-As for the architecture of our neural network, we went for something less fancy than a convolutional neural network, since we do not have enough compute and we simply do not need it to do our experiments. We have used a two layer feed-forward neural network with ReLU activation at the hidden state the size of hidden and output states of 256. Naturally, we also have to tune the hyperparameters. Fortunately, the original DQN paper states that the same hyperparameter settings work for a diverse range of tasks. For that reason, we do not necessarily need to tune them for every setting. We tune only the learning rate, for which we try 3 different values. In each experimental setting, we report the results of the optimal learning rate for that setting. The batch size is fixed at 32, which is a typical value that works well under normal conditions. The target network is updated every 10 iterations. Every experiment is run with 10 different seeds, to measure the significance of our findings.
+As for the architecture of our neural network, we went for something less fancy than a convolutional neural network, since we do not have enough compute and we simply do not need it to do our experiments. We have used a two layer feed-forward neural network with ReLU activation at the hidden state the size of hidden and output states of 256. Naturally, we also have to tune the hyperparameters. Fortunately, the original DQN paper states that the same hyperparameter settings work for a diverse range of tasks. For that reason, we do not necessarily need to tune them for every setting. We tune only the learning rate, for which we try 3 different values. In each experimental setting, we report the results of the optimal learning rate for that setting. The batch size is fixed at 32, which is a typical value that works well under normal conditions. The target network is updated every 10 iterations. Every experiment is run with 10 different seeds, to measure the significance of our findings. 
 
 Our main question is whether the DQN network converges to a solution under the different experimental settings. To measure convergence, we compute the parameter gradient norm in each iteration. The minimal norm (MN) is an indication of convergence. If it is close to zero, it means that the policy hardly changed at some point during training. To have intuition on the variance of this norm over seeds, we report its average, standard deviation, and its minimum and maximum over seeds.
 
@@ -116,9 +116,58 @@ Our results will be summarized in a table like below for every environment:
 | -RC  |        |        |        |        |                       |
 | +R   |        |        |        |        |                       |
 
-The implementation of the DQN model is based on [this tutorial for pytorch](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) and code written for an assignment for the course Reinforcement Learning at the University of Amsterdam (2019). You can find the code here: ...
+The implementation of the DQN model is based on [this tutorial for pytorch](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) and code written for an assignment for the course Reinforcement Learning at the University of Amsterdam (2019). You can find the code here in this [public Github repository](https://github.com/Vansil/ReinforceRepoLab).
 
-# Results
+# Graphs, Tables and a Serious Struggle
+
+Now that all the background information and experiment set-up is made clear, we can finally do the experiments and take a look at the results! First, to make it a bit clearer what we are measuring exactly, let's take one example model and show the raw results. Then we will explain the struggle  We will first consider a model without experience replay, trained with a learning rate of 0.01. The easiest way of seeing that this model found a succesful policy in our cart pole world, is looking at the reward in each training episode. This should regularly reach the maximum of 200, at which point the simulation is stopped. Let's take a look!
+
+<img src="{{site.baseurl}}/assets/curve-reward-noreplay.png" width="450">
+
+As you can see, after about 50 episodes, our agent has learned to balance and reaches the maximal reward. We also see an interesting effect in later episodes: out of nowhere, the reward is very low! This might be happening, because the agent doesn't know that the simulation is stopped because of a limit in reward. The agent just notices that she is getting a lot of reward, and then this suddenly stops. She might reason that there is something wrong with her policy, and tries desparately to change it. This means that once an agent reaches the maximum reward, this curve becomes a bit unreliable. 
+
+What is also interesting, is that this same model does not always converge. In fact, if we start from a different random initialization, it might not work. We will talk a little more about this in the last section.
+
+What else can we look at? As explained above, the size of the parameter updates (the gradient norm) might indicate whether the model is converged or not. Let's take a look at the gradient norm of our agent:
+
+<img src="{{site.baseurl}}/assets/curve-gradnorm-noreplay.png" width="450">
+
+This is interesting. A desirable gradient norm curve does not oscillate too much, and gradually goes down as we approach the optimum. Here we see quite some oscillation, and it the curve gradually goes up. The curve starts rising a lot faster once the agent has reached the maximum reward. This might be an indication of her desperate attempt to reach a higher reward. It might also explain the sudden large spikes down in the reward curve. Moreover, in reinforcement learning, the rules of training models are a bit different. As the agent gets better at a task, this opens new situations up in the environment which she couldn't even reach before (for example a balancing position). Because these new situations are more challenging, the parameters actually might need a significant adaptation to handle them. Nevertheless, we think that the minimum point in this curve is a good indicator of convergence. 
+
+
+Now that we understand what the metrics entail, we can dive in some more detail and see the full results of the experiment! And this is where our struggle begins. In the table below, we show the results of all models that we trained. In the first column you can see that we experimented with the normal DQN set-up, and with taking out one of the tricks. The second column represents our hyper-parameter search: we tried five different learning rates for each model to make the chance lower that models do not converge because of our decision of the learning rate. In the third column, we have our first metric: the average minimum norm. The minimum norm is the lowest gradient norm we have seen during training, and is an indication of convergence. Because we trained each model ten times with a different random initialization, we average this number over all runs. In the last column, we have the maximum reward. This is the highest reward that the model received during training. We maximize this also over the ten runs. This means that if the model achieved the highest score during at least one of the runs, we will see it here. As an indicator of significance, we added a table with standard deviations in the end of this blog.
+
+
+| name               |     learning rate |   average min norm |   maximum reward |
+|:-------------------|-------:|----------:|---------:|
+| normal DQN         | 0.0001 |  0.81264  |    13    |
+|          | 0.001  |  0.178009 |    42  |
+|          | 0.01   |  0.253629 |    139    |
+|          | 0.1    |  2.38314  |    101  |
+|          | 0.5    |  3.05398  |    82  |
+| no fixed target    | 0.0001 |  0.802796 |    13    |
+|     | 0.001  |  1.78273  |    13  |
+|     | 0.01   |  2.7362   |    13  |
+|     | 0.1    |  3.00169  |    13  |
+|     | 0.5    |  3.05398  |    13    |
+| no replay          | 0.0001 |  2.01506  |    13    |
+|           | 0.001  |  0.299916 |    20  |
+|           | 0.01   |  0.56101  |    **200**    |
+|           | 0.1    |  1.22809  |    102  |
+|           | 0.5    |  2.31314  |   **200**  |
+| no reward clipping | 0.0001 |  0.81264  |    13    |
+|  | 0.001  |  0.178009 |    42  |
+|  | 0.01   |  0.253629 |    139    |
+|  | 0.1    |  2.38314  |    101  |
+|  | 0.5    |  3.07293  |    82 |
+
+This brings us to the struggle: as you can see, the normal DQN model did not reach this score. Even when we tried some more learning rates in exploratory experiments, we could not get it to fully converge. Surprisingly, the model without experience replay did achieve the highest reward. In our analysis, we noticed that we implemented these models with an effective batch size of 1. This might cause it to show this surprising behaviour. Unfortunately, we had no time to test this setting on the other models.
+
+
+
+
+
+
 
 # Conclusion and Discussion
 
@@ -134,3 +183,32 @@ What could this mean?
 2) overfitting for DQN with ER?
 
 *FIGURE OF PERFORMANCE AND SEE THAT IT IMPROVES ONLY AFTER 32 STEPS?*
+
+
+<img src="{{site.baseurl}}/assets/bar-reward-noreplay-seed.png" width="450">
+
+
+# Appendix
+The standard deviations of the numbers in our general results table:
+| name               |     learning rate |   average min norm |   maximum reward |
+|:-------------------|-------:|----------:|----------:|
+| normal DQN         | 0.0001 |  0.475719 |  1.22474  |
+|          | 0.001  |  0.186563 | 12.9203   |
+|          | 0.01   |  0.209046 | 36.8782   |
+|          | 0.1    |  1.01215  | 32.8424   |
+|          | 0.5    |  0.126179 | 28.05     |
+| no fixed target    | 0.0001 |  0.510327 |  1.22474  |
+|     | 0.001  |  1.09885  |  1.05935  |
+|     | 0.01   |  0.79992  |  1.05935  |
+|     | 0.1    |  0.111884 |  0.918937 |
+|     | 0.5    |  0.126179 |  1.22474  |
+| no replay          | 0.0001 |  0.121955 |  1.22474  |
+|           | 0.001  |  0.162925 |  2.86938  |
+|           | 0.01   |  0.236551 | 74.7143   |
+|           | 0.1    |  0.713205 | 40.0972   |
+|           | 0.5    |  0.133144 | 66.3197   |
+| no reward clipping | 0.0001 |  0.475719 |  1.22474  |
+|  | 0.001  |  0.186563 | 12.9203   |
+|  | 0.01   |  0.209046 | 36.8782   |
+|  | 0.1    |  1.01215  | 32.8424   |
+|  | 0.5    |  0.137243 | 28.6516   |
