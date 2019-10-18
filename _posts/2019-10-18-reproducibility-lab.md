@@ -88,6 +88,8 @@ It sounds more promising now, right? Let's check it out for ourselves by outlini
 
 We will attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to the [CartPole](https://gym.openai.com/envs/CartPole-v0/) environment, available within the openAI gym. We did not have a specific preference for an environment, the openAI gym has many that are suitable for DQN. However, CartPole is a fairly simplistic one that does not take too much time to solve. Also, it has states that are represented by continuous numbers, hence we need to use function approximators (like DQN). Sadly, we could not test other environments, because of the time constraint. Therefore, we focus on the specific settings of one particular environment.
 
+<img src="{{site.baseurl}}/assets/cartpole.gif" width="450">
+
 We investigate the following five experiments:
 
 1. **Normal DQN (DQN)**: this is the normal model with experience replay, periodic iterative updates and reward clipping.
@@ -165,16 +167,14 @@ Code quality is another important factor which can change the performance of an 
 
 However, all DQN models with experience replay only learn when there is enough memory and skip learning otherwise. This is a convenient way to implement experience replay, however, it comes with the catch that the learning only happens after 32 steps have been taken in the first episode. An alternative implementation could be to implement online learning until there is enough memory, however, then we would break the i.i.d. assumption for part of the episode, because the data are sequentially dependent now. We, however, do not think that this additional head start can explain the big difference between the models. The larger batch-size also means that the same experiences are used more often than once, which could result in overfitting; complicating the learning even more.
 
-*FIGURE OF PERFORMANCE AND SEE THAT IT IMPROVES ONLY AFTER 32 STEPS?*
-
 The hyperparameters of training a model, such as the learning-rate, can make the difference between good and bad learning. A too large learning rate can result in divergence in normal supervised learning. Reinforcement Learning makes this more complicated, as the model interacts with a dynamic changing environment. This makes it very difficult to find the right hyperparameters. Since we have only done a limited hyperparameter search, it could well be that for this reason we could not find any converging models for the DQN with experience replay.
-
-*TODO: further recommendations? Hyperparameter search? smaller batch size?*
 
 
 
 # Appendix
 The standard deviations of the numbers in our general results table:
+
+
 | name               |     learning rate |   average min norm |   maximum reward |
 |:-------------------|-------:|----------:|----------:|
 | normal DQN         | 0.0001 |  0.475719 |  1.22474  |
