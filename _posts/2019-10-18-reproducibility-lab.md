@@ -86,7 +86,7 @@ It sounds more promising now, right? Let's check it out for ourselves by outlini
 
 # Experimental Design
 
-We will attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to the [CartPole](https://gym.openai.com/envs/CartPole-v0/) environment, available within the openAI gym. We did not have a specific preference for an environment, the openAI gym has many that are suitable for DQN. However, CartPole is a fairly simplistic one that does not take too much time to solve. Sadly, we could not test other environments, because of the time constraint. Therefore, we focus on the specific settings of one particular environment.
+We will attempt to grasp the importance of the model's assumptions as we believe these are essential for convergence. This includes experience replay, periodic iterative updates (similar to fixing the target for a previously defined number of steps) and reward clipping. We narrow our search down to the [CartPole](https://gym.openai.com/envs/CartPole-v0/) environment, available within the openAI gym. We did not have a specific preference for an environment, the openAI gym has many that are suitable for DQN. However, CartPole is a fairly simplistic one that does not take too much time to solve. Also, it is a continuous control task that requires an actor-critic method (like DQN). Sadly, we could not test other environments, because of the time constraint. Therefore, we focus on the specific settings of one particular environment.
 
 We investigate the following five experiments:
 
