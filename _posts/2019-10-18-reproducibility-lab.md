@@ -27,7 +27,7 @@ In the table below you can see an overview of the different concepts and the sym
 # The Cookie Collector
 Let's make this a bit more concrete. Let's say we have a cookie-collecting robot in a world that has cookies laying around all over the place. The robot can move in four directions (up, down, left, right). She always knows its position in the world, and uses that information to determine where to go next. When she finds a cookie, she gets happy, but she's always looking for more. Her battery lasts two minutes, after which somebody will recharge her and let her play the game again from the start.
 
-The components of the cookie collecting robot and her environment fit nicely in the RL framework. The table shows what form each RL concept takes in this example. Because the example fits in the RL framework, it means that we can apply RL methods to make the robot as succesful as possible, in this case: to make it collect as many cookies as possible withing two minutes.
+The components of the cookie collecting robot and her environment fit nicely in the RL framework. The table shows what form each RL concept takes in this example. Because the example fits in the RL framework, it means that we can apply RL methods to make the robot as succesful as possible, in this case: to make it collect as many cookies as possible within two minutes.
 
 
 | **RL concept**  | **Cookie Collector**                                      |
@@ -94,7 +94,7 @@ We investigate five experimental settings:
 2. **No experience replay (-ER)**: the policy is updated in an "online" fashion. Particularly, we use S, A, S+1 and A+1 at the time of update.
 3. **No periodic updates of target network (-TN)**: the target is defined by the current network, instead of a target network that is periodically updated.
 4. **No reward clipping (-RC)**: the real rewards of the environment are used.
-5. **Reward gain (R+)**: the rewards are not clipped, but are miagnified by a factor 100 instead. The intuition behind this is that using magnified rewards hopefully leads to a more extreme result, making the role of reward clipping more obvious for DQN.
+5. **Reward gain (R+)**: the rewards are not clipped, but are magnified by a factor 100 instead. The intuition behind this is that using magnified rewards hopefully leads to a more extreme result, making the role of reward clipping more obvious for DQN.
 
 In the experiments, we expect our algorithm to perform worse when we leave components out. This indicates that the tricks are indeed necessary for proper training. We try to disprove this hypothesis by constantly disabling one of the tricks. If the results show that this does not significantly deteriorates performance, we have a contradiction and our hypothesis is incorrect.  
 
