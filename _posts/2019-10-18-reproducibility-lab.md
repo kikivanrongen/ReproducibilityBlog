@@ -68,7 +68,8 @@ First of all, we look at function approximation. This is a popular technique tha
 
 Next, we turn to bootstrapping. If we are in a current state and we wish to find the optimal action, we need to have some knowlegde of the future state that this action will lead us to. We can look at this as our 'future value'; we do not have it right now, but we need to take it into account when choosing a path. Bootstrapping is a technique that includes future value by calculating the state-action value of the state we transition to. Other methods (like Monte Carlo) simply use the discounted rewards. The future value is included in the update rule. Now how does this translate to the DQN, you wonder? Take a closer look at the image below:
 
-![DQN algorithm](/DQN-algorithm2.png)
+<!-- ![DQN algorithm](./assets/DQN-algorithm.png) -->
+<img src="/assets/DQN-algorithm.png" alt="DQN algorithm" width="400"/>
 
 This is the pseudocode for the DQN algorithm. Hopefully, you will notice that the new state-action value is calculated as the sum of the reward and the subsequent state-action value. For this reason, DQN effectively makes use of bootstrapping.
 
