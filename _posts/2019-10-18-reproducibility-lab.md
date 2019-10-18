@@ -122,15 +122,14 @@ The implementation of the DQN model is based on [this tutorial for pytorch](http
 
 # Conclusion and Discussion
 
-The most unexpected result of the experiments is that the DQN without experience replay (-ER) actually performs better that the full DQN! It seems that the -ER model is only one that converges. The fact that -ER is only convering on some seeds, but not all, shows how big an influence the choice of the seeds can be on experiments in RL. How can it be that this is the only model that converges?
+The most unexpected result of the experiments is that the DQN without experience replay (-ER) actually performs better than the full DQN! It seems that the -ER model is the only one that converges. Interestingly, -ER is only converging for some seeds, but not all, as you can see in the figure below. This illustrates how big an influence the choice of the seeds can be on your experiments.
 
-*FIGURE OF DIFFERENT SEEDS -ER*
+*TODO: FIGURE OF DIFFERENT SEEDS -ER*
 
-Code quality is another important factor which can change the performance of an algorithm and should be taken into account looking into the reproducibility of the experiment. One difference between -ER and the other DQN adaptations, is that -ER only trains it network on the current experience in an online fashion, while the other ones update with a batch-size of 32 for a random sample from all previous experiences. However, all DQN models with experience replay only learn when there is enough memory and skips learning otherwise. This is a convenient way to implement experience replay, however, it comes with the catch that the learning only happens after 32 steps have been taken in the first episode. An alternative implementation could be to implement online learning until there is enough memory, however, then we would partially break the i.i.d. assumption, because the data are sequentially dependent now.
+How can it be that this is the only model that converges?
 
-What could this mean?
+Code quality is another important factor which can change the performance of an algorithm and is important to take into account when testing an algorithm. One noticable difference between -ER and the other DQN adaptations, is that -ER only trains it network on the current experience in an online fashion, while the other ones update with a batch-size of 32 for a random sample from all previous experiences. 
 
-1) head start for -ER?
-2) overfitting for DQN with ER?
+However, all DQN models with experience replay only learn when there is enough memory and skip learning otherwise. This is a convenient way to implement experience replay, however, it comes with the catch that the learning only happens after 32 steps have been taken in the first episode. An alternative implementation could be to implement online learning until there is enough memory, however, then we would break the i.i.d. assumption for part of the episode, because the data are sequentially dependent now. We, however, do not think that this additional head start can explain the big difference between the models.
 
-*FIGURE OF PERFORMANCE AND SEE THAT IT IMPROVES ONLY AFTER 32 STEPS?*
+The hyperparameters of training a model, such as the learning-rate, can make the difference between good and bad learning. A too large learning rate can result in divergence in normal supervised learning. Reinforcement Learning makes this more complicated, as the model interacts with a dynamic changing environment. This makes it very difficult to find the right hyperparameters. Since we have only done a limited hyperparameter search, it could well be that for this reason we could not find any converging models for the DQN with experience replay.
