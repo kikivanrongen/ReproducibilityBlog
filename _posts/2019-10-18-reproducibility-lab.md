@@ -157,7 +157,7 @@ This brings us to the struggle: as you can see, the normal DQN model did not rea
 
 
 
-# Conclusion and Discussion
+# Conclusion, Discussion and a little Reflection
 
 The most unexpected result of the experiments is that the DQN without experience replay (-ER) actually performs better than the full DQN! It seems that the -ER model is the only one that converges. Interestingly, -ER is only converging for some seeds, but not all, as you can see in the figure below. This illustrates how big an influence the choice of the seeds can be on your experiments.
 
@@ -170,6 +170,8 @@ Code quality is another important factor which can change the performance of an 
 However, all DQN models with experience replay only learn when there is enough memory and skip learning otherwise. This is a convenient way to implement experience replay, however, it comes with the catch that the learning only happens after 32 steps have been taken in the first episode. An alternative implementation could be to implement online learning until there is enough memory, however, then we would break the i.i.d. assumption for part of the episode, because the data are sequentially dependent now. We, however, do not think that this additional head start can explain the big difference between the models. The larger batch-size also means that the same experiences are used more often than once, which could result in overfitting; complicating the learning even more.
 
 The hyperparameters of training a model, such as the learning-rate, can make the difference between good and bad learning. A too large learning rate can result in divergence in normal supervised learning. Reinforcement Learning makes this more complicated, as the model interacts with a dynamic changing environment. This makes it very difficult to find the right hyperparameters. Since we have only done a limited hyperparameter search, it could well be that for this reason we could not find any converging models for the DQN with experience replay.
+
+Concluding, we unfortunately did not manage to answer our questions about the influence of DQN's tricks on its performance. We did learn a lot about explaining abstract reinforcement learning concepts in a comprehensible way, to present research in a blog style and to do research that is reproducible. In retrospect, we should have taken more hyperparameters into account and first focus completely on the normal DQN model, before looking further and investigating adaptations. The first next step could be to take batch size as a hyperparameter, and try more learning rates by random search. The results of the models without experience replay indicate that even without a trick, the system may still work, and this is a very interesting insight. The necessity of the DQN tricks is problem-dependent.
 
 
 
