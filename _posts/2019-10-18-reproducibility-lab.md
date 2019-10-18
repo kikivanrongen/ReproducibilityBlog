@@ -44,7 +44,7 @@ The components of the cookie collecting robot and her environment fit nicely in 
 # The best policy
 As mentioned before, the agent is interested in getting as much value out of the episode as possible. In formal terms, we want to find the policy which maximizes the expected total reward in the episode. When the agent is in a certain state, she wants to choose the action of which she expects that it will deliver her the most value. This does not only depend on the immediate reward. The agent should also look ahead and choose actions that brings the agent closer to states with high rewards (e.g. closer to a cookie).
 
-To make this decision, we want to have a state-action value function \(Q(s_t,a_t)\). This function tells us how much value we can expect when we take action $a$ in state $s$. When she has this function, the agent can simply observe her state $s$, and then choose the $a$ which has highest $Q(s,a)$. What remains is the challenge of finding this state-action value function.
+To make this decision, we want to have a state-action value function $Q(s,a)$. This function tells us how much value we can expect when we take action $a$ in state $s$. When she has this function, the agent can simply observe her state $s$, and then choose the $a$ which has highest $Q(s,a)$. What remains is the challenge of finding this state-action value function.
 
 # DQN and the Deadly Triad
 Methods to find the state-action value function are called Q-learning methods, and they work in an iterative way. First, an initial setting of the Q-values of each state-action pair is chosen. If this is used as basis for a policy, it performs very bad. In Q-learning, we iteratively update the Q-values (or parameters of our model that gives us Q-values) to make the policy better and better. If the method works, the rewards should converge to a high value if we iterate long enough.
@@ -70,7 +70,7 @@ Next, we turn to bootstrapping. If we are in a current state and we wish to find
 
 ![DQN algorithm](/assets/DQN-algorithm.png){:height="400px" width="499px"}
 
-~~~
+{% highlight ruby %}
 ( 1) Initialize replay memory $D$ to capacity $N$
 ( 2) Initialize action-value function $Q$ with random weights $\theta$
 ( 3) Initialize target action-value function $\hat{Q}$ with weights $\theta_{target} = \theta$
@@ -90,7 +90,7 @@ Next, we turn to bootstrapping. If we are in a current state and we wish to find
 (17)         Every $C$ steps reset $\hat{Q}=Q$
 (18)     End For
 (19) End For
-~~~
+{% endhighlight %}
 
 This is the pseudocode for the DQN algorithm. Hopefully, you will notice that the new state-action value is calculated as the sum of the reward and the subsequent state-action value. For this reason, DQN effectively makes use of bootstrapping.
 
